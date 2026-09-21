@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: kyro
+  datasource:
+    url: jdbc:postgresql://localhost:5433/kyro
+    username: postgres
+    password: Test1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8080
