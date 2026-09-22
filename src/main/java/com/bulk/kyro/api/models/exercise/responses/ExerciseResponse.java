@@ -6,7 +6,7 @@ public record ExerciseResponse(
         Integer id,
         String name
 ) {
-    public static ExerciseResponse fromExercise(ExerciseEntity exercise) {
+    public static ExerciseResponse fromEntity(ExerciseEntity exercise) {
         return new ExerciseResponse(
                 exercise.getId(),
                 exercise.getName()

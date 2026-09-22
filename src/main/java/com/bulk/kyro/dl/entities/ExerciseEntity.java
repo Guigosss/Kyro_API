@@ -34,6 +34,7 @@ public class ExerciseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Getter @Setter
     @ManyToMany
     @JoinTable(
             name = "exercise_musclegroup",
