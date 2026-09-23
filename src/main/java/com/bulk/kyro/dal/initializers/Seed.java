@@ -91,6 +91,8 @@ public class Seed implements CommandLineRunner {
         ExerciseEntity calfRaise = exerciseRepository.save(
                 new ExerciseEntity("Calf Raise", Set.of(calves)));
 
+        ExerciseEntity deadlift = exerciseRepository.save(
+                new ExerciseEntity("Deadlift", Set.of(glutes, ischios, quadriceps, back))); //- To be deleted
 
         //- Workout Session Entities
         WorkoutSessionEntity push = workoutSessionRepository.save(
@@ -101,7 +103,6 @@ public class Seed implements CommandLineRunner {
 
         WorkoutSessionEntity legs = workoutSessionRepository.save(
                 new WorkoutSessionEntity("Leg Day", LocalDate.now().minusDays(2), "Séance jambes assez intense.", user));
-
 
         //- Workout Set Entities
         //- Push

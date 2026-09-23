@@ -8,6 +8,7 @@ import com.bulk.kyro.dal.repositories.RoleRepository;
 import com.bulk.kyro.dal.repositories.UserRepository;
 import com.bulk.kyro.dl.entities.RoleEntity;
 import com.bulk.kyro.dl.entities.UserEntity;
+import com.bulk.kyro.dl.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        RoleEntity role = roleRepository.findByName(user.getUsername())
+        RoleEntity role = roleRepository.findByName(UserRole.USER.name())
                 .orElseThrow(() -> new RoleNotFoundException("Role 'user' not found"));
 
         user.setRole(role);
@@ -41,10 +42,10 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     @Override
     public UserEntity login(String username, String password) {
         UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User with username" + username + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
 
         if (!passwordEncoder.matches(password, user.getPassword())){
-            throw new UserInvalidPasswordException("Invalid password for user" + username);
+            throw new UserInvalidPasswordException("Invalid password for user " + username);
         }
 
         return user;

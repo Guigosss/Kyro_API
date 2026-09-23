@@ -14,7 +14,7 @@ import java.util.List;
 public record WorkoutSessionRequest(
         @NotBlank String name,
         @NotNull LocalDate date,
-        @NotBlank @Size(max = 500) String notes,
+        @Size(max = 500) String notes,
         @NotEmpty List<ExerciseWorkoutRequest> exercises //- WorkoutSetForm
 ) {
     public WorkoutSessionEntity toEntity(UserEntity user){
