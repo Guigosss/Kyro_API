@@ -82,6 +82,7 @@ public class ExerciseController {
         return ResponseEntity.noContent().build();
     }
 
+    //- Soft Delete
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {

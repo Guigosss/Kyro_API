@@ -45,8 +45,8 @@ public class Seed implements CommandLineRunner {
         roleRepository.save(adminRole);
 
         String password = passwordEncoder.encode("Test1234");
-        UserEntity admin = new UserEntity("Guigos", password, userRole);
-        UserEntity user = new UserEntity("Guigui", password, adminRole);
+        UserEntity user = new UserEntity("Guigos", password, userRole);
+        UserEntity admin = new UserEntity("Guigui", password, adminRole);
         userRepository.saveAll(List.of(admin,user));
 
         //- Muscle Group Entities

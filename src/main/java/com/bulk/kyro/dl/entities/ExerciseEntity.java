@@ -15,6 +15,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,11 +24,13 @@ import java.util.Set;
 @Entity
 @Table(name = "exercise")
 @NoArgsConstructor @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false) @ToString
-public class ExerciseEntity {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false) @ToString
+@SoftDelete(columnName = "is_enabled", strategy = SoftDeleteType.ACTIVE)
+public class ExerciseEntity extends BaseEntity {
 
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Getter @Setter
