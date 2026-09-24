@@ -18,4 +18,9 @@ public class WorkoutSetServiceImpl implements WorkoutSetService {
     public void saveAll(List<WorkoutSetEntity> sets) {
         workoutSetRepository.saveAll(sets);
     }
+
+    @Override
+    public List<WorkoutSetEntity> findBySessionId(Integer sessionId) {
+        return workoutSetRepository.findBySessionId(sessionId);
+    }
 }

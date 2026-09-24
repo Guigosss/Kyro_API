@@ -7,4 +7,5 @@ import java.util.List;
 public interface WorkoutSetService {
 
     void saveAll(List<WorkoutSetEntity> sets);
+    List<WorkoutSetEntity> findBySessionId(Integer sessionId);
 }
