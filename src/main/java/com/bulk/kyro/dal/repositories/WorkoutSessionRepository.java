@@ -11,4 +11,5 @@ public interface WorkoutSessionRepository extends JpaRepository<WorkoutSessionEn
 
     boolean existsByIdAndUserId(Integer id, Integer userId);
     Page<WorkoutSessionEntity> findByUserId(Integer userId, Pageable pageable);
+    WorkoutSessionEntity findByIdAndUserId(Integer sessionId, Integer userId);
 }

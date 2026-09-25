@@ -23,4 +23,9 @@ public class WorkoutSetServiceImpl implements WorkoutSetService {
     public List<WorkoutSetEntity> findBySessionId(Integer sessionId) {
         return workoutSetRepository.findBySessionId(sessionId);
     }
+
+    @Override
+    public void deleteAllBySessionId(Integer sessionId) {
+        workoutSetRepository.deleteById(sessionId);
+    }
 }

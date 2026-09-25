@@ -2,12 +2,12 @@
 INSERT INTO role_ (name) VALUES ('USER');
 INSERT INTO role_ (name) VALUES ('ADMIN');
 
--- Insert users (password: Test1234)
-INSERT INTO user_ (username, password, role_id)
-VALUES ('Guigos', '<BCrypt_HASH_DE_Test1234>', 1);
+-- Insert users
+INSERT INTO user_ (username, password, role_id, created_at, updated_at)
+VALUES ('Guigos', '$2a$10$T.hS506DjX00K6WKB.FzhO8r1Gs1p0Rt5LcrVH5SSkdK.waPLjFl6', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO user_ (username, password, role_id)
-VALUES ('Guigui', '<BCrypt_HASH_DE_Test1234>', 2);
+INSERT INTO user_ (username, password, role_id, created_at, updated_at)
+VALUES ('Guigui', '$2a$10$T.hS506DjX00K6WKB.FzhO8r1Gs1p0Rt5LcrVH5SSkdK.waPLjFl6', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert muscle groups
 INSERT INTO muscle_group (name) VALUES ('Chest');
@@ -21,17 +21,17 @@ INSERT INTO muscle_group (name) VALUES ('Glutes');
 INSERT INTO muscle_group (name) VALUES ('Calves');
 
 -- Insert exercises
-INSERT INTO exercise (name, is_enabled) VALUES ('Bench Press', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Incline Dumbbell Press', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Pull Up', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Rowing Bar', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Biceps Curl', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Triceps Extension', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Squat', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Legs Press', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Leg Curl', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Calf Raise', true);
-INSERT INTO exercise (name, is_enabled) VALUES ('Deadlift', true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Bench Press', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Incline Dumbbell Press', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Pull Up', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Rowing Bar', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Biceps Curl', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Triceps Extension', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Squat', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Legs Press', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Leg Curl', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Calf Raise', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+INSERT INTO exercise (name, created_at, updated_at, is_enabled) VALUES ('Deadlift', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
 -- Insert exercise muscle groups
 INSERT INTO exercise_musclegroup (exercise_id, musclegroup_id, is_enabled) VALUES (1, 1, true);

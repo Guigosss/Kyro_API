@@ -36,7 +36,7 @@ public class Seed implements CommandLineRunner {
 
     private final PasswordEncoder passwordEncoder;
 
-    //@Override
+    @Override
     public void run(String... args) throws Exception {
 
         //- User Entities
