@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,8 +18,17 @@ public class JwtUtils {
     private final JwtBuilder jwtBuilder;
     private final JwtParser jwtParser;
 
-    public JwtUtils() {
-        String jwtSecret = "8fK2mP9xQ7vL4nR6tY3wA1sD5gH8jZ0cX2bN6mV9pQ4rT7uK"; //- Temporary hardcoded
+    private final long accessTokenValidity;
+    private final long refreshTokenValidity;
+
+    public JwtUtils(
+            @Value("${jwt.secret}") String jwtSecret,
+            @Value("${jwt.accessTokenValidity}") long accessTokenValidity,
+            @Value("${jwt.refreshTokenValidity}") long refreshTokenValidity
+    ) {
+        this.accessTokenValidity = accessTokenValidity;
+        this.refreshTokenValidity = refreshTokenValidity;
+
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
         jwtBuilder = Jwts.builder().signWith(secretKey);

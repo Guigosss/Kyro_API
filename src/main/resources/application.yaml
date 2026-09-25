@@ -2,9 +2,9 @@ spring:
   application:
     name: kyro
   datasource:
-    url: jdbc:postgresql://localhost:5433/kyro
-    username: postgres
-    password: Test1234
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -13,5 +13,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+jwt:
+  secret: ${JWT_SECRET}
+  accessTokenValidity: 900
+  refreshTokenValidity: 604800
 server:
   port: 8080
