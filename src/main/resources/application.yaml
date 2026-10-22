@@ -19,3 +19,7 @@ jwt:
   refreshTokenValidity: 604800
 server:
   port: 8080
+
+cors:
+  allowed-origins:
+    - http://localhost:4200
