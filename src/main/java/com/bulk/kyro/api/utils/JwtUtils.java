@@ -1,5 +1,6 @@
 package com.bulk.kyro.api.utils;
 
+import com.bulk.kyro.api.models.user.UserContext;
 import com.bulk.kyro.dl.entities.UserEntity;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -18,8 +19,8 @@ public class JwtUtils {
     private final JwtBuilder jwtBuilder;
     private final JwtParser jwtParser;
 
-    private final long accessTokenValidity;
-    private final long refreshTokenValidity;
+    private final long accessTokenValidity; //- 15 minutes
+    private final long refreshTokenValidity; //- 7 days
 
     public JwtUtils(
             @Value("${jwt.secret}") String jwtSecret,
@@ -42,7 +43,7 @@ public class JwtUtils {
                 .claim("id", user.getId())
                 .claim("role", user.getRole().getName())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 3600 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenValidity * 1000))
                 .compact();
     }
 
@@ -62,11 +63,27 @@ public class JwtUtils {
         return parseToken(token).get("role", String.class);
     }
 
+    public UserContext getUser(String token) {
+        return new UserContext(getId(token), getUsername(token), getRole(token));
+    }
+
     public boolean validateToken(String token) {
         Claims claims = parseToken(token);
-
         Date now = new Date();
-
         return now.after(claims.getIssuedAt()) && now.before(claims.getExpiration());
+    }
+
+    public String generateRefreshToken(UserEntity user) {
+        return jwtBuilder
+                .subject(user.getUsername())
+                .claim("id", user.getId())
+                .claim("role", user.getRole().getName())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenValidity * 1000))
+                .compact();
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token);
     }
 }
