@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record WorkoutSetRequest(
+        Integer id,
         @NotNull @PositiveOrZero @MinMaxWeight() Double weight,
         @NotNull @Positive Integer reps
 ) {

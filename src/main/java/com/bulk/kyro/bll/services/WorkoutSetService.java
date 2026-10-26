@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface WorkoutSetService {
 
-    void saveAll(List<WorkoutSetEntity> sets);
+    void save(WorkoutSetEntity set);
     List<WorkoutSetEntity> findBySessionId(Integer sessionId);
-    void deleteAllBySessionId(Integer sessionId);
+    void deleteAll(List<WorkoutSetEntity> sets);
 }

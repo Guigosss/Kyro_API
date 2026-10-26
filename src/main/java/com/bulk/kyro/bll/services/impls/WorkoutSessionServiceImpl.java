@@ -4,6 +4,7 @@ import com.bulk.kyro.api.models.exerciseworkout.requests.ExerciseWorkoutRequest;
 import com.bulk.kyro.api.models.exerciseworkout.responses.ExerciseWorkoutResponse;
 import com.bulk.kyro.api.models.workoutsession.requests.WorkoutSessionRequest;
 import com.bulk.kyro.api.models.workoutsession.responses.WorkoutSessionResponse;
+import com.bulk.kyro.api.models.workoutset.requests.WorkoutSetRequest;
 import com.bulk.kyro.bll.services.WorkoutSessionService;
 import com.bulk.kyro.bll.services.WorkoutSetService;
 import com.bulk.kyro.dal.repositories.ExerciseRepository;
@@ -19,9 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,7 +61,6 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
         existing.setDate(request.date());
         existing.setNotes(request.notes());
 
-        workoutSetService.deleteAllBySessionId(sessionId);
         saveExerciseWorkouts(existing, request.exercises());
     }
 
@@ -92,11 +93,37 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
     }
 
     private void saveExerciseWorkouts(WorkoutSessionEntity session, List<ExerciseWorkoutRequest> exercises) {
-        List<WorkoutSetEntity> sets = new ArrayList<>();
+        List<WorkoutSetEntity> existingSets = workoutSetService.findBySessionId(session.getId());
+
+        Set<Integer> receivedIds = new HashSet<>();
+
         for (ExerciseWorkoutRequest ew : exercises) {
             ExerciseEntity exercise = exerciseRepository.findById(ew.exerciseId()).orElseThrow();
-            sets.addAll(ew.toEntities(session, exercise));
+
+            for (int i = 0; i < ew.sets().size(); i++) {
+                WorkoutSetRequest request = ew.sets().get(i);
+
+                if (request.id() == null) {
+                    workoutSetService.save(new WorkoutSetEntity(request.weight(), request.reps(), i + 1, session, exercise));
+                } else {
+                    WorkoutSetEntity set = existingSets.stream()
+                            .filter(s -> s.getId().equals(request.id()))
+                            .findFirst()
+                            .orElseThrow();
+
+                    set.setWeight(request.weight());
+                    set.setReps(request.reps());
+                    set.setOrderIndex(i + 1);
+
+                    receivedIds.add(set.getId());
+                }
+            }
         }
-        workoutSetService.saveAll(sets);
+
+        List<WorkoutSetEntity> toDelete = existingSets.stream()
+                .filter(s -> !receivedIds.contains(s.getId()))
+                .toList();
+
+        workoutSetService.deleteAll(toDelete);
     }
 }

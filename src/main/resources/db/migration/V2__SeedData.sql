@@ -69,14 +69,14 @@ INSERT INTO exercise_musclegroup (exercise_id, musclegroup_id, is_enabled) VALUE
 INSERT INTO exercise_musclegroup (exercise_id, musclegroup_id, is_enabled) VALUES (11, 2, true);
 
 -- Insert workout sessions
-INSERT INTO workout_session (name, date, notes, user_id)
-VALUES ('Push Day', CURRENT_DATE - 6, 'Bonne séance pectoraux.', 1);
+INSERT INTO workout_session (name, date, notes, user_id, is_enabled)
+VALUES ('Push Day', CURRENT_DATE - 6, 'Bonne séance pectoraux.', 1, true);
 
-INSERT INTO workout_session (name, date, notes, user_id)
-VALUES ('Pull Day', CURRENT_DATE - 4, 'Bonnes sensations sur le dos.', 1);
+INSERT INTO workout_session (name, date, notes, user_id, is_enabled)
+VALUES ('Pull Day', CURRENT_DATE - 4, 'Bonnes sensations sur le dos.', 1, true);
 
-INSERT INTO workout_session (name, date, notes, user_id)
-VALUES ('Leg Day', CURRENT_DATE - 2, 'Séance jambes assez intense.', 1);
+INSERT INTO workout_session (name, date, notes, user_id, is_enabled)
+VALUES ('Leg Day', CURRENT_DATE - 2, 'Séance jambes assez intense.', 1, true);
 
 -- Insert workout sets
 -- Push

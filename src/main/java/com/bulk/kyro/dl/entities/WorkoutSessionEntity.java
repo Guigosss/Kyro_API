@@ -17,6 +17,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 @Table(name = "workout_session")
 @NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false) @ToString
+@SoftDelete(columnName = "is_enabled", strategy = SoftDeleteType.ACTIVE)
 public class WorkoutSessionEntity {
 
     @Getter

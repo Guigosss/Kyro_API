@@ -15,8 +15,8 @@ public class WorkoutSetServiceImpl implements WorkoutSetService {
     private final WorkoutSetRepository workoutSetRepository;
 
     @Override
-    public void saveAll(List<WorkoutSetEntity> sets) {
-        workoutSetRepository.saveAll(sets);
+    public void save(WorkoutSetEntity set) {
+        workoutSetRepository.save(set);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class WorkoutSetServiceImpl implements WorkoutSetService {
     }
 
     @Override
-    public void deleteAllBySessionId(Integer sessionId) {
-        workoutSetRepository.deleteById(sessionId);
+    public void deleteAll(List<WorkoutSetEntity> sets) {
+        workoutSetRepository.deleteAll(sets);
     }
 }
