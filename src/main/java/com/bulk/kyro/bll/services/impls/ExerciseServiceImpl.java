@@ -2,12 +2,12 @@ package com.bulk.kyro.bll.services.impls;
 
 import com.bulk.kyro.api.models.exercise.requests.ExerciseRequest;
 import com.bulk.kyro.api.models.exercise.responses.ExerciseResponse;
+import com.bulk.kyro.bll.exceptions.exercise.ExerciseNotFoundException;
 import com.bulk.kyro.bll.services.ExerciseService;
 import com.bulk.kyro.bll.services.MuscleGroupService;
 import com.bulk.kyro.dal.repositories.ExerciseRepository;
 import com.bulk.kyro.dl.entities.ExerciseEntity;
 import com.bulk.kyro.dl.entities.MuscleGroupEntity;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
@@ -57,13 +57,13 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public void delete(Integer id) {
         if (!exerciseRepository.existsById(id)) {
-            throw new EntityNotFoundException("Exercise with id " + id + " does not exist.");
+            throw new ExerciseNotFoundException(id);
         }
         exerciseRepository.deleteById(id);
     }
 
     private ExerciseEntity findEntityById(Integer id) {
         return exerciseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Exercise with id " + id + " does not exist."));
+                .orElseThrow(() -> new ExerciseNotFoundException(id));
     }
 }

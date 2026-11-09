@@ -5,6 +5,12 @@ import com.bulk.kyro.api.models.exerciseworkout.responses.ExerciseWorkoutRespons
 import com.bulk.kyro.api.models.workoutsession.requests.WorkoutSessionRequest;
 import com.bulk.kyro.api.models.workoutsession.responses.WorkoutSessionResponse;
 import com.bulk.kyro.api.models.workoutset.requests.WorkoutSetRequest;
+import com.bulk.kyro.bll.exceptions.exercise.ExerciseNotFoundException;
+import com.bulk.kyro.bll.exceptions.workout.WorkoutSessionNotFoundException;
+import com.bulk.kyro.bll.exceptions.workout.EmptyWorkoutSessionException;
+import com.bulk.kyro.bll.exceptions.workout.DuplicateExerciseInSessionException;
+import com.bulk.kyro.bll.exceptions.workout.EmptyExerciseSetsException;
+import com.bulk.kyro.bll.exceptions.workout.WorkoutSetNotFoundException;
 import com.bulk.kyro.bll.services.WorkoutSessionService;
 import com.bulk.kyro.bll.services.WorkoutSetService;
 import com.bulk.kyro.dal.repositories.ExerciseRepository;
@@ -13,7 +19,6 @@ import com.bulk.kyro.dl.entities.ExerciseEntity;
 import com.bulk.kyro.dl.entities.UserEntity;
 import com.bulk.kyro.dl.entities.WorkoutSessionEntity;
 import com.bulk.kyro.dl.entities.WorkoutSetEntity;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,7 +72,7 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
     @Override
     public void deleteSession(Integer id, Integer userId) {
         if (!workoutSessionRepository.existsByIdAndUserId(id, userId)) {
-            throw new EntityNotFoundException("Workout session with id " + id + " does not exist.");
+            throw new WorkoutSessionNotFoundException(id);
         }
         workoutSessionRepository.deleteById(id);
     }
@@ -75,7 +80,7 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
     private WorkoutSessionEntity findEntity(Integer sessionId, Integer userId) {
         WorkoutSessionEntity session = workoutSessionRepository.findByIdAndUserId(sessionId, userId);
         if (session == null) {
-            throw new EntityNotFoundException("Workout session with id " + sessionId + " does not exist.");
+            throw new WorkoutSessionNotFoundException(sessionId);
         }
         return session;
     }
@@ -93,23 +98,27 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
     }
 
     private void saveExerciseWorkouts(WorkoutSessionEntity session, List<ExerciseWorkoutRequest> exercises) {
+        validateExercises(exercises);
+
         List<WorkoutSetEntity> existingSets = workoutSetService.findBySessionId(session.getId());
 
         Set<Integer> receivedIds = new HashSet<>();
 
         for (ExerciseWorkoutRequest ew : exercises) {
-            ExerciseEntity exercise = exerciseRepository.findById(ew.exerciseId()).orElseThrow();
+            ExerciseEntity exercise = exerciseRepository.findById(ew.exerciseId()).orElseThrow(() -> new ExerciseNotFoundException(ew.exerciseId()));
 
             for (int i = 0; i < ew.sets().size(); i++) {
                 WorkoutSetRequest request = ew.sets().get(i);
 
                 if (request.id() == null) {
+                    //- Create Workout Set
                     workoutSetService.save(new WorkoutSetEntity(request.weight(), request.reps(), i + 1, session, exercise));
                 } else {
+                    //- Update Workout Set
                     WorkoutSetEntity set = existingSets.stream()
                             .filter(s -> s.getId().equals(request.id()))
                             .findFirst()
-                            .orElseThrow();
+                            .orElseThrow(() -> new WorkoutSetNotFoundException(request.id()));
 
                     set.setWeight(request.weight());
                     set.setReps(request.reps());
@@ -120,10 +129,29 @@ public class WorkoutSessionServiceImpl implements WorkoutSessionService {
             }
         }
 
+        //- Delete Removed Sets
         List<WorkoutSetEntity> toDelete = existingSets.stream()
                 .filter(s -> !receivedIds.contains(s.getId()))
                 .toList();
 
         workoutSetService.deleteAll(toDelete);
+    }
+
+    private void validateExercises(List<ExerciseWorkoutRequest> exercises) {
+        if (exercises == null || exercises.isEmpty()) {
+            throw new EmptyWorkoutSessionException();
+        }
+
+        Set<Integer> exerciseIds = new HashSet<>();
+
+        for (ExerciseWorkoutRequest ew : exercises) {
+            if (!exerciseIds.add(ew.exerciseId())) {
+                throw new DuplicateExerciseInSessionException(ew.exerciseId());
+            }
+
+            if (ew.sets() == null || ew.sets().isEmpty()) {
+                throw new EmptyExerciseSetsException(ew.exerciseId());
+            }
+        }
     }
 }
